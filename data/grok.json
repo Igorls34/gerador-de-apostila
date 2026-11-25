@@ -1,0 +1,467 @@
+{
+  "metadados": {
+    "titulo": "Power BI do Básico ao Avançado",
+    "subtitulo": "Power BI do Básico ao Avançado Focando em Integrar com o Excel, com Passo a Passo Claro e Prático",
+    "autor": "Igor Laurindo",
+    "instituicao": "Interatech",
+    "versao": "1.0 - 2026",
+    "logo_path": "assets/logo.png",
+    "cor_primaria": "#0078D4",
+    "cor_secundaria": "#F2C811"
+  },
+  "capitulos": [
+    {
+      "numero": "01",
+      "titulo": "Fundamentos do Power BI e Preparação do Ambiente",
+      "blocos": [
+        {
+          "tipo": "paragrafo",
+          "conteudo": "O <strong>Power BI</strong> é a plataforma de Business Intelligence da Microsoft que permite transformar dados brutos em insights visuais poderosos. Para pessoas que já possuem conhecimento básico em Excel, a transição é natural: muitas das lógicas de tabelas, filtros e fórmulas se repetem, porém com recursos muito mais robustos de modelagem, atualização automática e compartilhamento."
+        },
+        {
+          "tipo": "paragrafo",
+          "conteudo": "Nesta apostila você aprenderá a integrar planilhas Excel diretamente ao Power BI, criar modelos de dados relacionais e construir dashboards profissionais. O foco será sempre o passo a passo prático, com atividades que você poderá reproduzir imediatamente."
+        },
+        {
+          "tipo": "subtitulo",
+          "conteudo": "O que é Power BI e por que usá-lo junto com o Excel"
+        },
+        {
+          "tipo": "paragrafo",
+          "conteudo": "Enquanto o Excel é excelente para análises pontuais e cálculos manuais, o Power BI foi projetado para conectar-se a múltiplas fontes, automatizar transformações e criar relatórios interativos que se atualizam sozinhos. A integração nativa entre os dois softwares permite que você continue usando suas planilhas Excel como fonte de dados confiável."
+        },
+        {
+          "tipo": "lista",
+          "estilo": "bullet",
+          "itens": [
+            "Power BI Desktop: aplicativo gratuito para criar relatórios (principal ferramenta desta apostila)",
+            "Power BI Service: versão online para publicar, compartilhar e agendar atualizações",
+            "Power BI Mobile: aplicativos para celular e tablet",
+            "Power Query: motor de transformação de dados (presente também no Excel moderno)"
+          ]
+        },
+        {
+          "tipo": "destaque",
+          "titulo": "Dica de Ouro",
+          "conteudo": "Se você já usa o Excel 365 ou Excel 2021, já possui o Power Query embutido. Muitas transformações que faremos no Power BI Desktop podem ser feitas primeiro no Excel e depois importadas, facilitando a curva de aprendizado."
+        },
+        {
+          "tipo": "subtitulo",
+          "conteudo": "Instalação do Power BI Desktop"
+        },
+        {
+          "tipo": "lista",
+          "estilo": "numerada",
+          "itens": [
+            "Acesse o site oficial: https://powerbi.microsoft.com/desktop",
+            "Clique em <strong>Baixar gratuitamente</strong>",
+            "Escolha a versão de 64 bits (recomendada para a maioria dos computadores atuais)",
+            "Execute o instalador e siga as orientações padrão",
+            "Após a instalação, abra o Power BI Desktop e faça login com uma conta Microsoft (pode ser gratuita)"
+          ]
+        },
+        {
+          "tipo": "imagem",
+          "caminho": "assets/diagrama_exemplo.png",
+          "legenda": "Figura 1: Interface inicial do Power BI Desktop após a instalação",
+          "largura": "85%"
+        },
+        {
+          "tipo": "subtitulo",
+          "conteudo": "Principais áreas da interface"
+        },
+        {
+          "tipo": "tabela",
+          "cabecalhos": ["Área", "Função Principal", "Uso mais comum"],
+          "linhas": [
+            ["Painel de Campos", "Lista todas as tabelas e colunas do modelo", "Arrastar campos para os visuais"],
+            ["Área de Relatório", "Canvas onde os gráficos e tabelas são criados", "Construção do dashboard"],
+            ["Exibição de Dados", "Visualização em grade das tabelas", "Verificar dados após transformações"],
+            ["Exibição de Modelo", "Diagrama de relacionamentos", "Criar e gerenciar relações entre tabelas"],
+            ["Power Query Editor", "Ambiente de transformação de dados", "Limpar, filtrar e modelar dados do Excel"]
+          ]
+        },
+        {
+          "tipo": "destaque",
+          "titulo": "Atividade Prática 1.1",
+          "conteudo": "Instale o Power BI Desktop, abra o programa e explore livremente as três visões principais (Relatório, Dados e Modelo). Não se preocupe em criar nada ainda. Anote três diferenças que você percebeu em relação à interface do Excel."
+        },
+        {
+          "tipo": "link",
+          "texto": "Documentação oficial do Power BI Desktop",
+          "url": "https://learn.microsoft.com/pt-br/power-bi/fundamentals/desktop-what-is-desktop"
+        }
+      ]
+    },
+    {
+      "numero": "02",
+      "titulo": "Integração com Excel – Importação e Conexão de Dados",
+      "blocos": [
+        {
+          "tipo": "paragrafo",
+          "conteudo": "A grande força do Power BI está na capacidade de se conectar a planilhas Excel de forma inteligente. Você pode importar dados de arquivos locais, pastas de rede ou até de arquivos armazenados no OneDrive ou SharePoint, mantendo a atualização automática."
+        },
+        {
+          "tipo": "paragrafo",
+          "conteudo": "Neste capítulo você aprenderá as melhores práticas para preparar planilhas Excel antes da importação e as diferentes formas de conectar os dados ao Power BI Desktop."
+        },
+        {
+          "tipo": "subtitulo",
+          "conteudo": "Preparando a planilha Excel para o Power BI"
+        },
+        {
+          "tipo": "lista",
+          "estilo": "bullet",
+          "itens": [
+            "Use sempre a primeira linha como cabeçalho de colunas (nunca mescle células no cabeçalho)",
+            "Evite linhas em branco no meio da tabela",
+            "Transforme intervalos de dados em <strong>Tabelas do Excel</strong> (Ctrl + T) – isso facilita muito a conexão",
+            "Remova totais e subtotais da planilha fonte (eles serão calculados no Power BI)",
+            "Padronize formatos de data e números"
+          ]
+        },
+        {
+          "tipo": "destaque",
+          "titulo": "Importante",
+          "conteudo": "Sempre que possível, transforme seus dados em <strong>Tabela do Excel</strong> antes de importar. No Power BI, tabelas nomeadas são reconhecidas automaticamente e facilitam a atualização incremental."
+        },
+        {
+          "tipo": "subtitulo",
+          "conteudo": "Métodos de conexão com arquivos Excel"
+        },
+        {
+          "tipo": "lista",
+          "estilo": "numerada",
+          "itens": [
+            "Abra o Power BI Desktop e clique em <strong>Obter Dados</strong>",
+            "Selecione <strong>Excel</strong> na lista de conectores",
+            "Navegue até o arquivo .xlsx ou .xls desejado",
+            "Na janela Navegador, marque as planilhas ou tabelas que deseja importar",
+            "Escolha entre <strong>Carregar</strong> (importação direta) ou <strong>Transformar Dados</strong> (abre o Power Query)"
+          ]
+        },
+        {
+          "tipo": "tabela",
+          "cabecalhos": ["Tipo de Conexão", "Quando usar", "Vantagem principal"],
+          "linhas": [
+            ["Importar", "Arquivos pequenos e médios que mudam pouco", "Performance máxima de consultas"],
+            ["DirectQuery", "Arquivos muito grandes ou que mudam constantemente", "Dados sempre atualizados (limitado no Excel)"],
+            ["Pasta de arquivos", "Vários arquivos Excel com mesma estrutura", "Combina automaticamente novos arquivos"]
+          ]
+        },
+        {
+          "tipo": "imagem",
+          "caminho": "assets/diagrama_exemplo.png",
+          "legenda": "Figura 2: Tela de seleção de tabelas e planilhas do arquivo Excel",
+          "largura": "85%"
+        },
+        {
+          "tipo": "subtitulo",
+          "conteudo": "Conectando a uma pasta de arquivos Excel"
+        },
+        {
+          "tipo": "paragrafo",
+          "conteudo": "Quando você possui vários arquivos Excel com a mesma estrutura (ex.: vendas por mês), a conexão do tipo <strong>Pasta</strong> é extremamente poderosa. O Power BI combina automaticamente todos os arquivos e permite que novos arquivos adicionados à pasta sejam incorporados na próxima atualização."
+        },
+        {
+          "tipo": "lista",
+          "estilo": "numerada",
+          "itens": [
+            "Em Obter Dados, escolha <strong>Pasta</strong>",
+            "Selecione a pasta que contém os arquivos Excel",
+            "Clique em <strong>Transformar Dados</strong>",
+            "No Power Query, use a coluna <code>Content</code> e clique em <strong>Combinar</strong>",
+            "Selecione a planilha ou tabela de exemplo e confirme"
+          ]
+        },
+        {
+          "tipo": "destaque",
+          "titulo": "Atividade Prática 2.1",
+          "conteudo": "Crie uma pasta no seu computador chamada 'Dados_Vendas'. Coloque dentro dela três arquivos Excel simples com a mesma estrutura de colunas (Data, Produto, Quantidade, Valor). Conecte a pasta ao Power BI usando o conector Pasta e observe como os dados são combinados automaticamente."
+        },
+        {
+          "tipo": "link",
+          "texto": "Guia oficial de conexão com arquivos Excel",
+          "url": "https://learn.microsoft.com/pt-br/power-bi/connect-data/desktop-connect-excel"
+        }
+      ]
+    },
+    {
+      "numero": "03",
+      "titulo": "Limpeza e Transformação de Dados com Power Query",
+      "blocos": [
+        {
+          "tipo": "paragrafo",
+          "conteudo": "O <strong>Power Query</strong> é o coração da preparação de dados no Power BI. Ele permite limpar, transformar e modelar dados provenientes do Excel de forma visual e repetível. Tudo o que você fizer fica registrado como etapas, o que garante que a próxima atualização dos dados aplique automaticamente as mesmas transformações."
+        },
+        {
+          "tipo": "paragrafo",
+          "conteudo": "Para quem já usa Excel, muitas operações serão familiares (filtrar, dividir colunas, substituir valores), porém com a vantagem de não alterar o arquivo original e de poder combinar dados de várias fontes."
+        },
+        {
+          "tipo": "subtitulo",
+          "conteudo": "Interface do Power Query Editor"
+        },
+        {
+          "tipo": "lista",
+          "estilo": "bullet",
+          "itens": [
+            "Painel de Consultas (esquerda): lista todas as tabelas/consultas do modelo",
+            "Área de Pré-visualização: mostra os dados após cada etapa",
+            "Painel de Etapas Aplicadas (direita): histórico de todas as transformações",
+            "Barra de Fórmulas: exibe o código M da etapa selecionada"
+          ]
+        },
+        {
+          "tipo": "destaque",
+          "titulo": "Dica de Ouro",
+          "conteudo": "Sempre renomeie as etapas aplicadas com nomes claros (ex.: 'Remover colunas desnecessárias' em vez de 'Removed Columns'). Isso facilita muito a manutenção futura do modelo."
+        },
+        {
+          "tipo": "subtitulo",
+          "conteudo": "Principais transformações para dados vindos do Excel"
+        },
+        {
+          "tipo": "lista",
+          "estilo": "numerada",
+          "itens": [
+            "Promover a primeira linha a cabeçalho (quando a tabela Excel não estiver formatada como Tabela)",
+            "Alterar tipos de dados das colunas (Texto, Número Inteiro, Decimal, Data, etc.)",
+            "Remover colunas ou linhas desnecessárias",
+            "Filtrar valores nulos ou indesejados",
+            "Dividir colunas por delimitador (ex.: separar Nome e Sobrenome)",
+            "Substituir valores ou preencher células em branco",
+            "Despivotar colunas (transformar colunas em linhas – muito útil para planilhas mal estruturadas)",
+            "Agrupar e agregar dados"
+          ]
+        },
+        {
+          "tipo": "tabela",
+          "cabecalhos": ["Problema comum no Excel", "Solução no Power Query", "Benefício"],
+          "linhas": [
+            ["Células mescladas no cabeçalho", "Usar 'Preencher' + 'Promover cabeçalhos'", "Cabeçalhos limpos e utilizáveis"],
+            ["Datas como texto", "Alterar tipo de dados para Data", "Permite filtros e hierarquias de data"],
+            ["Valores nulos em colunas importantes", "Substituir valores ou remover linhas", "Evita erros em cálculos posteriores"],
+            ["Colunas de mês espalhadas", "Despivotar outras colunas", "Estrutura normalizada para análise"]
+          ]
+        },
+        {
+          "tipo": "imagem",
+          "caminho": "assets/diagrama_exemplo.png",
+          "legenda": "Figura 3: Exemplo de etapas aplicadas no Power Query Editor",
+          "largura": "85%"
+        },
+        {
+          "tipo": "subtitulo",
+          "conteudo": "Criando colunas personalizadas"
+        },
+        {
+          "tipo": "paragrafo",
+          "conteudo": "Além das transformações prontas, você pode criar novas colunas usando a linguagem M ou a interface de coluna personalizada. Exemplos comuns: calcular valor total (Quantidade × Preço), extrair ano de uma data ou criar categorias baseadas em regras."
+        },
+        {
+          "tipo": "destaque",
+          "titulo": "Atividade Prática 3.1",
+          "conteudo": "Importe uma planilha Excel com dados de vendas que contenha colunas de Data, Produto, Quantidade e Preço Unitário. No Power Query: (1) altere os tipos de dados corretamente; (2) crie uma coluna personalizada chamada 'Valor Total' multiplicando Quantidade × Preço Unitário; (3) filtre apenas os anos de 2024 e 2025; (4) renomeie todas as etapas de forma clara. Clique em Fechar e Aplicar."
+        },
+        {
+          "tipo": "link",
+          "texto": "Documentação do Power Query",
+          "url": "https://learn.microsoft.com/pt-br/power-query/"
+        }
+      ]
+    },
+    {
+      "numero": "04",
+      "titulo": "Modelagem de Dados e Introdução ao DAX",
+      "blocos": [
+        {
+          "tipo": "paragrafo",
+          "conteudo": "Após importar e transformar os dados do Excel, o próximo passo crítico é a <strong>modelagem</strong>. Um bom modelo de dados é a base de qualquer relatório Power BI de alta performance. Sem relacionamentos corretos, os visuais apresentarão resultados errados ou lentos."
+        },
+        {
+          "tipo": "paragrafo",
+          "conteudo": "Neste capítulo você aprenderá a criar relacionamentos entre tabelas (ex.: Vendas × Produtos × Calendário) e dará os primeiros passos com a linguagem <strong>DAX</strong> (Data Analysis Expressions), que é o equivalente às fórmulas do Excel, porém muito mais poderosa para cálculos em modelos tabulares."
+        },
+        {
+          "tipo": "subtitulo",
+          "conteudo": "Exibição de Modelo e Relacionamentos"
+        },
+        {
+          "tipo": "lista",
+          "estilo": "bullet",
+          "itens": [
+            "Relacionamento um-para-muitos (1:*): o mais comum (ex.: uma categoria possui muitos produtos)",
+            "Relacionamento um-para-um (1:1): raro, usado em casos específicos",
+            "Direção do filtro: geralmente unidirecional (da tabela dimensão para a tabela fato)",
+            "Cardinalidade e integridade referencial"
+          ]
+        },
+        {
+          "tipo": "destaque",
+          "titulo": "Regra de Ouro da Modelagem",
+          "conteudo": "Prefira o modelo <strong>estrela</strong>: uma ou mais tabelas fato (ex.: Vendas) no centro, conectadas a tabelas dimensão (Produtos, Clientes, Calendário, Lojas). Evite relacionamentos muitos-para-muitos sempre que possível."
+        },
+        {
+          "tipo": "subtitulo",
+          "conteudo": "Criando uma tabela Calendário"
+        },
+        {
+          "tipo": "paragrafo",
+          "conteudo": "Uma tabela de datas é essencial para análises temporais. Você pode criá-la diretamente no Power BI com DAX ou importar uma planilha Excel de calendário."
+        },
+        {
+          "tipo": "lista",
+          "estilo": "numerada",
+          "itens": [
+            "Na exibição de Dados ou Modelo, vá em <strong>Modelagem > Nova tabela</strong>",
+            "Digite a fórmula: <code>Calendario = CALENDAR(DATE(2023,1,1), DATE(2026,12,31))</code>",
+            "Adicione colunas de Ano, Mês, Nome do Mês, Trimestre etc. usando funções DAX",
+            "Marque a tabela como tabela de datas (clique com botão direito > Marcar como tabela de datas)"
+          ]
+        },
+        {
+          "tipo": "tabela",
+          "cabecalhos": ["Função DAX", "O que faz", "Exemplo prático"],
+          "linhas": [
+            ["SUM", "Soma valores de uma coluna", "TotalVendas = SUM(Vendas[Valor])"],
+            ["CALCULATE", "Modifica o contexto de filtro", "Vendas2025 = CALCULATE([TotalVendas], Calendario[Ano] = 2025)"],
+            ["RELATED", "Busca valor de tabela relacionada", "Categoria = RELATED(Produtos[Categoria])"],
+            ["DIVIDE", "Divisão segura (evita erro de divisão por zero)", "TicketMedio = DIVIDE([TotalVendas], [QtdPedidos])"]
+          ]
+        },
+        {
+          "tipo": "imagem",
+          "caminho": "assets/diagrama_exemplo.png",
+          "legenda": "Figura 4: Exemplo de modelo estrela com tabelas fato e dimensão",
+          "largura": "85%"
+        },
+        {
+          "tipo": "subtitulo",
+          "conteudo": "Medidas vs Colunas Calculadas"
+        },
+        {
+          "tipo": "paragrafo",
+          "conteudo": "No Power BI existem dois tipos principais de cálculos: <strong>colunas calculadas</strong> (armazenadas na tabela, ocupam memória) e <strong>medidas</strong> (calculadas sob demanda, mais eficientes). Prefira sempre medidas para agregações."
+        },
+        {
+          "tipo": "destaque",
+          "titulo": "Atividade Prática 4.1",
+          "conteudo": "Com os dados de vendas já importados: (1) crie uma tabela Calendário com DAX; (2) relacione a coluna de data da tabela Vendas com a tabela Calendário; (3) crie as medidas Total de Vendas, Quantidade Total e Ticket Médio; (4) teste as medidas em uma tabela visual simples."
+        },
+        {
+          "tipo": "link",
+          "texto": "Guia de introdução ao DAX",
+          "url": "https://learn.microsoft.com/pt-br/dax/"
+        }
+      ]
+    },
+    {
+      "numero": "05",
+      "titulo": "Criação de Dashboards, Visualizações e Publicação",
+      "blocos": [
+        {
+          "tipo": "paragrafo",
+          "conteudo": "Chegou o momento de transformar o modelo de dados em insights visuais. O Power BI oferece dezenas de visuais nativos e a possibilidade de importar visuais personalizados. O segredo de um bom dashboard não está na quantidade de gráficos, mas na clareza e na capacidade de responder perguntas de negócio rapidamente."
+        },
+        {
+          "tipo": "paragrafo",
+          "conteudo": "Neste capítulo final você aprenderá a construir páginas de relatório eficazes, aplicar formatação profissional, criar interatividade com filtros e segmentações, e publicar o trabalho no Power BI Service."
+        },
+        {
+          "tipo": "subtitulo",
+          "conteudo": "Principais tipos de visuais e quando usar"
+        },
+        {
+          "tipo": "tabela",
+          "cabecalhos": ["Visual", "Melhor uso", "Cuidados"],
+          "linhas": [
+            ["Cartão", "Indicadores-chave (KPIs) isolados", "Evite excesso de cartões na mesma página"],
+            ["Gráfico de barras/colunas", "Comparar categorias", "Ordene do maior para o menor quando fizer sentido"],
+            ["Gráfico de linhas", "Evolução temporal", "Use eixo de data contínuo"],
+            ["Mapa", "Análises geográficas", "Precisa de dados de localização limpos"],
+            ["Tabela / Matriz", "Detalhamento e drill-down", "Use com moderação em dashboards executivos"],
+            ["Segmentação de dados", "Filtros interativos", "Posicione de forma consistente em todas as páginas"]
+          ]
+        },
+        {
+          "tipo": "subtitulo",
+          "conteudo": "Boas práticas de design de dashboard"
+        },
+        {
+          "tipo": "lista",
+          "estilo": "bullet",
+          "itens": [
+            "Comece pelos KPIs mais importantes no topo da página",
+            "Use uma paleta de cores consistente (aproveite as cores da empresa)",
+            "Mantenha alinhamento e espaçamento regulares",
+            "Evite poluição visual: menos é mais",
+            "Inclua títulos claros e, quando necessário, subtítulos explicativos",
+            "Teste a interatividade: clique em um visual e veja se os outros respondem corretamente"
+          ]
+        },
+        {
+          "tipo": "destaque",
+          "titulo": "Dica de Ouro de Design",
+          "conteudo": "Use o recurso <strong>Sincronizar segmentações</strong> para que um filtro aplicado em uma página também funcione nas demais. Isso cria uma experiência de navegação muito mais fluida para o usuário final."
+        },
+        {
+          "tipo": "subtitulo",
+          "conteudo": "Publicando no Power BI Service"
+        },
+        {
+          "tipo": "lista",
+          "estilo": "numerada",
+          "itens": [
+            "No Power BI Desktop, clique em <strong>Publicar</strong> na faixa de opções",
+            "Escolha o workspace desejado (Meu workspace é o padrão gratuito)",
+            "Após a publicação, acesse app.powerbi.com",
+            "Configure a atualização agendada (necessário gateway se os arquivos Excel estiverem em rede local)",
+            "Compartilhe o relatório ou crie um aplicativo para distribuição controlada"
+          ]
+        },
+        {
+          "tipo": "imagem",
+          "caminho": "assets/diagrama_exemplo.png",
+          "legenda": "Figura 5: Exemplo de dashboard final com KPIs, gráficos e segmentações",
+          "largura": "85%"
+        },
+        {
+          "tipo": "subtitulo",
+          "conteudo": "Atividade Prática Final Integrada"
+        },
+        {
+          "tipo": "paragrafo",
+          "conteudo": "Esta atividade consolida todos os conhecimentos da apostila. Utilize dados reais ou fictícios de vendas vindos de planilhas Excel."
+        },
+        {
+          "tipo": "lista",
+          "estilo": "numerada",
+          "itens": [
+            "Importe e transforme pelo menos duas tabelas Excel (Vendas e Produtos ou Clientes)",
+            "Crie uma tabela Calendário e estabeleça os relacionamentos corretos",
+            "Crie no mínimo cinco medidas DAX relevantes para o negócio",
+            "Construa um dashboard com pelo menos duas páginas: uma executiva (KPIs + gráficos principais) e uma analítica (mais detalhada)",
+            "Aplique formatação profissional e interatividade",
+            "Publique no Power BI Service e compartilhe o link com um colega ou consigo mesmo"
+          ]
+        },
+        {
+          "tipo": "destaque",
+          "titulo": "Parabéns!",
+          "conteudo": "Ao concluir esta atividade você terá percorrido todo o ciclo: do Excel bruto até um dashboard publicado e interativo. Este é o fluxo real de trabalho utilizado por analistas de dados e profissionais de Business Intelligence no dia a dia."
+        },
+        {
+          "tipo": "link",
+          "texto": "Central de Aprendizado do Power BI (Microsoft)",
+          "url": "https://learn.microsoft.com/pt-br/training/powerplatform/power-bi"
+        },
+        {
+          "tipo": "link",
+          "texto": "Comunidade Power BI (fóruns e exemplos)",
+          "url": "https://community.fabric.microsoft.com/t5/Power-BI/ct-p/powerbi"
+        }
+      ]
+    }
+  ]
+}

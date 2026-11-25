@@ -1,0 +1,61 @@
+{
+  "metadados": {
+    "titulo": "",
+    "subtitulo": "",
+    "autor": "",
+    "instituicao": "",
+    "versao": "",
+    "logo_path": "assets/logo.png",
+    "cor_primaria": "#0056b3",
+    "cor_secundaria": "#00a8e8"
+  },
+  "capitulos": [
+    {
+      "numero": "01",
+      "titulo": "",
+      "blocos": [
+        {
+          "tipo": "paragrafo",
+          "conteudo": ""
+        },
+        {
+          "tipo": "subtitulo",
+          "conteudo": ""
+        },
+        {
+          "tipo": "lista",
+          "estilo": "bullet",
+          "itens": [
+            ""
+          ]
+        },
+        {
+          "tipo": "destaque",
+          "titulo": "",
+          "conteudo": ""
+        },
+        {
+          "tipo": "tabela",
+          "cabecalhos": [
+            "",
+            ""
+          ],
+          "linhas": [
+            ["", ""]
+          ]
+        },
+        {
+          "tipo": "imagem",
+          "caminho": "",
+          "legenda": "",
+          "largura": "80%"
+        },
+        {
+          "tipo": "link",
+          "texto": "",
+          "url": ""
+        }
+      ]
+    }
+  ]
+}

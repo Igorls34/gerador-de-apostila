@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ metadados.titulo | default(title | default('Apostila')) }}</title>
+    {% if base_href %}
+    <base href="{{ base_href }}/">
+    {% endif %}
+    <link rel="stylesheet" href="templates/style.css">
+    <style>
+        :root {
+            --cor-primaria: {{ metadados.cor_primaria | default('#0056b3') }};
+            --cor-secundaria: {{ metadados.cor_secundaria | default('#00a8e8') }};
+        }
+    </style>
+</head>
+<body>
+
+    <!-- CAPA -->
+    <div class="capa">
+        <div class="capa-topo">
+            {% if metadados.logo_path %}
+                <img src="{{ metadados.logo_path }}" alt="Logo" class="capa-logo">
+            {% endif %}
+            {% if metadados.instituicao %}
+                <div class="capa-tag">MATERIAL DIDÁTICO • {{ metadados.instituicao }}</div>
+            {% endif %}
+        </div>
+
+        <div class="capa-corpo">
+            <h1 class="capa-titulo">{{ metadados.titulo | default(title | default('Apostila')) }}</h1>
+            {% if metadados.subtitulo %}
+                <p class="capa-subtitulo">{{ metadados.subtitulo }}</p>
+            {% endif %}
+        </div>
+
+        <div class="capa-rodape">
+            <div>
+                {% if metadados.autor %}
+                    <span>Autor: <strong>{{ metadados.autor }}</strong></span>
+                {% endif %}
+            </div>
+            <div>
+                {% if metadados.versao %}
+                    <span>Edição: {{ metadados.versao }}</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTEÚDO DOS CAPÍTULOS -->
+    <main class="conteudo-principal">
+        {% for cap in capitulos %}
+        <section class="capitulo">
+            <div class="capitulo-header">
+                {% if cap.numero %}
+                    <span class="capitulo-num">CAPÍTULO {{ cap.numero }}</span>
+                {% endif %}
+                <h2 class="capitulo-titulo">{{ cap.titulo }}</h2>
+            </div>
+
+            {% for bloco in cap.blocos | default([]) %}
+                
+                {% if bloco.tipo == 'paragrafo' %}
+                    <p class="texto">{{ bloco.conteudo | safe }}</p>
+
+                {% elif bloco.tipo == 'subtitulo' %}
+                    <h3 class="subtitulo">{{ bloco.conteudo }}</h3>
+
+                {% elif bloco.tipo == 'lista' %}
+                    {% if bloco.estilo == 'numerada' or bloco.estilo == 'ol' %}
+                        <ol class="lista">
+                            {% for item in bloco.itens | default([]) %}
+                                <li>{{ item | safe }}</li>
+                            {% endfor %}
+                        </ol>
+                    {% else %}
+                        <ul class="lista">
+                            {% for item in bloco.itens | default([]) %}
+                                <li>{{ item | safe }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+
+                {% elif bloco.tipo == 'destaque' %}
+                    <div class="caixa-destaque">
+                        {% if bloco.titulo %}
+                            <div class="destaque-titulo">{{ bloco.titulo }}</div>
+                        {% endif %}
+                        <div class="destaque-texto">{{ bloco.conteudo | safe }}</div>
+                    </div>
+
+                {% elif bloco.tipo == 'tabela' %}
+                    <table class="tabela">
+                        {% if bloco.cabecalhos %}
+                        <thead>
+                            <tr>
+                                {% for th in bloco.cabecalhos %}
+                                    <th>{{ th }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        {% endif %}
+                        <tbody>
+                            {% for linha in bloco.linhas | default([]) %}
+                                <tr>
+                                    {% for celula in linha %}
+                                        <td>{{ celula | safe }}</td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                {% elif bloco.tipo == 'imagem' %}
+                    <figure class="figura">
+                        <img src="{{ bloco.caminho }}" alt="{{ bloco.legenda | default('') }}" style="width: {{ bloco.largura | default('100%') }}; max-width: 100%;">
+                        {% if bloco.legenda %}
+                            <figcaption>{{ bloco.legenda }}</figcaption>
+                        {% endif %}
+                    </figure>
+
+                {% elif bloco.tipo == 'link' %}
+                    <div class="bloco-link">
+                        🔗 <a href="{{ bloco.url }}" target="_blank">{{ bloco.texto | default(bloco.url) }}</a>
+                    </div>
+
+                {% endif %}
+
+            {% endfor %}
+        </section>
+        {% endfor %}
+    </main>
+
+</body>
+</html>
