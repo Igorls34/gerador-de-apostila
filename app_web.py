@@ -503,7 +503,7 @@ function atualizarFormularioDinamico() {
     const inst = document.getElementById("fInst").value.trim() || "[Digite o nome da empresa ou escola]";
     const versao = document.getElementById("fVersao").value.trim() || "1.0 - 2026";
     const caps = document.getElementById("fCaps").value.trim() || "[Ex: 3 capítulos detalhados]";
-    const topicos = document.getElementById("fTopicos").value.trim() || "- [Tópico 1...]\n   - [Tópico 2...]";
+    const topicos = document.getElementById("fTopicos").value.trim() || "- [Tópico 1...]\\n   - [Tópico 2...]";
     const cores = document.getElementById("fCores").value.trim() || "Deixe a IA escolher";
 
     const texto = `Por favor, gere a apostila completa em formato JSON seguindo rigorosamente o esquema técnico e as regras estabelecidas no Prompt Mestre.
