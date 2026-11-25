@@ -208,7 +208,7 @@ def gerar_apostila(
     # Fallback 2: weasyprint
     if not pdf_gerado:
         logger.info("Tentando motor alternativo (weasyprint)...")
-        pdf_gerado = converter_via_weasyprint(html_renderizado, caminho_pdf_abs, DIR_TEMPLATES)
+        pdf_gerado = converter_via_weasyprint(html_renderizado, caminho_pdf_abs, DIR_BASE)
 
     if not pdf_gerado:
         raise RuntimeError(

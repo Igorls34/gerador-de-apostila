@@ -669,6 +669,12 @@ async function copiarTexto(elementId, btnElement) {
 """
 
 
+@app.route("/health", methods=["GET"])
+def health():
+    """Healthcheck para monitoramento e CI/CD."""
+    return jsonify({"status": "ok", "service": "gerador-de-apostila"}), 200
+
+
 @app.route("/")
 def index():
     return render_template_string(HTML_TEMPLATE)
@@ -770,7 +776,7 @@ def api_gerar():
                     os.remove(caminho_html_temp)
         else:
             if not gerar_pdf.converter_via_pdfkit(html, caminho_pdf):
-                if not gerar_pdf.converter_via_weasyprint(html, caminho_pdf, gerar_pdf.DIR_TEMPLATES):
+                if not gerar_pdf.converter_via_weasyprint(html, caminho_pdf, gerar_pdf.DIR_BASE):
                     raise RuntimeError("Nenhum motor de conversão PDF encontrado.")
 
         duracao = round(time.perf_counter() - inicio, 2)
