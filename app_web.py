@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+import re
 import sys
 import threading
 import time
@@ -124,8 +125,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             <span>Gerador de Apostilas em PDF</span>
             <span class="badge bg-info text-dark ms-2 fw-semibold">Web Studio</span>
         </span>
-        <div class="d-flex align-items-center gap-3 text-white-50 small">
-            <span><i class="bi bi-check-circle-fill text-success"></i> Motor Chromium Ativo</span>
+        <div class="d-flex align-items-center gap-3 small">
+            <button class="btn btn-outline-info btn-sm fw-semibold d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#modalPrompts" onclick="carregarPrompts()">
+                <i class="bi bi-magic"></i> Prompts para IA
+            </button>
+            <span class="text-white-50"><i class="bi bi-check-circle-fill text-success"></i> Motor Chromium Ativo</span>
         </div>
     </div>
 </nav>
@@ -473,8 +477,193 @@ async function gerarPDF() {
         btn.innerHTML = '<i class="bi bi-rocket-takeoff"></i> Gerar Apostila PDF';
     }
 }
+
+let promptsCarregados = false;
+let templateFormularioBase = "";
+
+async function carregarPrompts() {
+    if (promptsCarregados) return;
+    try {
+        const resp = await fetch("/api/prompts");
+        const data = await resp.json();
+        document.getElementById("txtPromptMestre").value = data.prompt_mestre || "Prompt Mestre não encontrado.";
+        templateFormularioBase = data.prompt_formulario || "";
+        document.getElementById("txtPromptFormulario").value = templateFormularioBase;
+        promptsCarregados = true;
+    } catch (e) {
+        console.error("Erro ao carregar prompts:", e);
+    }
+}
+
+function atualizarFormularioDinamico() {
+    const tema = document.getElementById("fTema").value.trim() || "[Digite aqui o tema da apostila]";
+    const subtitulo = document.getElementById("fSubtitulo").value.trim() || "[Digite aqui o subtítulo ou o objetivo da apostila]";
+    const publico = document.getElementById("fPublico").value.trim() || "[Ex: Iniciante, Intermediário, Avançado / Profissionais de TI / Alunos]";
+    const autor = document.getElementById("fAutor").value.trim() || "[Digite o nome do autor]";
+    const inst = document.getElementById("fInst").value.trim() || "[Digite o nome da empresa ou escola]";
+    const versao = document.getElementById("fVersao").value.trim() || "1.0 - 2026";
+    const caps = document.getElementById("fCaps").value.trim() || "[Ex: 3 capítulos detalhados]";
+    const topicos = document.getElementById("fTopicos").value.trim() || "- [Tópico 1...]\n   - [Tópico 2...]";
+    const cores = document.getElementById("fCores").value.trim() || "Deixe a IA escolher";
+
+    const texto = `Por favor, gere a apostila completa em formato JSON seguindo rigorosamente o esquema técnico e as regras estabelecidas no Prompt Mestre.
+
+Abaixo estão os dados do formulário de solicitação:
+
+[FORMULÁRIO DE GERAÇÃO DA APOSTILA]
+--------------------------------------------------------------------------------
+1. TEMA PRINCIPAL: 
+   ${tema}
+
+2. SUBTÍTULO / FOCO DO MATERIAL: 
+   ${subtitulo}
+
+3. PÚBLICO-ALVO E NÍVEL: 
+   ${publico}
+
+4. NOME DO AUTOR: 
+   ${autor}
+
+5. NOME DA INSTITUIÇÃO / EMPRESA: 
+   ${inst}
+
+6. VERSÃO / ANO: 
+   ${versao}
+
+7. QUANTIDADE DE CAPÍTULOS DESEJADA: 
+   ${caps}
+
+8. TÓPICOS ESPECÍFICOS QUE NÃO PODEM FALTAR (OPCIONAL):
+   ${topicos.replace(/\\n/g, '\\n   ')}
+
+9. PREFERÊNCIA DE CORES OU IDENTIDADE (OPCIONAL): 
+   ${cores}
+--------------------------------------------------------------------------------
+
+Retorne apenas o JSON puro, formatado e pronto para renderização.`;
+
+    document.getElementById("txtPromptFormulario").value = texto;
+}
+
+async function copiarTexto(elementId, btnElement) {
+    const texto = document.getElementById(elementId).value;
+    try {
+        await navigator.clipboard.writeText(texto);
+        const originalHtml = btnElement.innerHTML;
+        btnElement.innerHTML = '<i class="bi bi-check-lg"></i> Copiado!';
+        btnElement.classList.replace("btn-primary", "btn-success");
+        setTimeout(() => {
+            btnElement.innerHTML = originalHtml;
+            btnElement.classList.replace("btn-success", "btn-primary");
+        }, 2000);
+    } catch (e) {
+        alert("Erro ao copiar: " + e);
+    }
+}
 </script>
 
+<!-- MODAL DE PROMPTS PARA IA -->
+<div class="modal fade" id="modalPrompts" tabindex="-1" aria-labelledby="modalPromptsLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white" style="background: linear-gradient(90deg, #0f172a 0%, #0056b3 100%);">
+                <h5 class="modal-title fw-bold d-flex align-items-center gap-2" id="modalPromptsLabel">
+                    <i class="bi bi-magic text-info"></i> Prompts de Preenchimento via IA
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body bg-light">
+                <ul class="nav nav-tabs mb-3" id="promptsTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active fw-semibold" id="tab-mestre-btn" data-bs-toggle="tab" data-bs-target="#tab-mestre" type="button" role="tab">
+                            🧠 1. Prompt Mestre (System / Zero-Shot)
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link fw-semibold" id="tab-form-btn" data-bs-toggle="tab" data-bs-target="#tab-form" type="button" role="tab">
+                            📝 2. Prompt de Formulário (User Prompt)
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="promptsTabsContent">
+                    <!-- TAB 1: PROMPT MESTRE -->
+                    <div class="tab-pane fade show active" id="tab-mestre" role="tabpanel">
+                        <div class="alert alert-info small d-flex justify-content-between align-items-center py-2">
+                            <span><strong>Onde usar:</strong> Cole no campo <em>System Message</em> da sua IA (ChatGPT, Claude, Gemini ou nó AI do n8n). Ele define todas as regras e o schema JSON.</span>
+                            <button class="btn btn-primary btn-sm fw-semibold text-nowrap ms-2" onclick="copiarTexto('txtPromptMestre', this)">
+                                <i class="bi bi-clipboard"></i> Copiar Prompt Mestre
+                            </button>
+                        </div>
+                        <textarea id="txtPromptMestre" class="form-control editor-textarea p-3" style="min-height: 420px;" readonly></textarea>
+                    </div>
+
+                    <!-- TAB 2: PROMPT DE FORMULÁRIO -->
+                    <div class="tab-pane fade" id="tab-form" role="tabpanel">
+                        <div class="alert alert-info small d-flex justify-content-between align-items-center py-2">
+                            <span><strong>Onde usar:</strong> Preencha os campos abaixo para montar seu pedido personalizado e envie para a IA após configurar o Prompt Mestre.</span>
+                            <button class="btn btn-primary btn-sm fw-semibold text-nowrap ms-2" onclick="copiarTexto('txtPromptFormulario', this)">
+                                <i class="bi bi-clipboard"></i> Copiar Formulário
+                            </button>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-5">
+                                <div class="card p-3 border-0 shadow-sm h-100">
+                                    <h6 class="fw-bold text-primary mb-3">Preenchimento Rápido</h6>
+                                    <div class="mb-2">
+                                        <label class="form-label small fw-semibold mb-1">1. Tema Principal</label>
+                                        <input type="text" id="fTema" class="form-control form-control-sm" placeholder="Ex: Automação com n8n" oninput="atualizarFormularioDinamico()">
+                                    </div>
+                                    <div class="mb-2">
+                                        <label class="form-label small fw-semibold mb-1">2. Subtítulo / Foco</label>
+                                        <input type="text" id="fSubtitulo" class="form-control form-control-sm" placeholder="Ex: Do Zero à Integração de APIs" oninput="atualizarFormularioDinamico()">
+                                    </div>
+                                    <div class="mb-2">
+                                        <label class="form-label small fw-semibold mb-1">3. Público-Alvo e Nível</label>
+                                        <input type="text" id="fPublico" class="form-control form-control-sm" placeholder="Ex: Iniciantes e Analistas" oninput="atualizarFormularioDinamico()">
+                                    </div>
+                                    <div class="row g-2 mb-2">
+                                        <div class="col-6">
+                                            <label class="form-label small fw-semibold mb-1">4. Autor</label>
+                                            <input type="text" id="fAutor" class="form-control form-control-sm" placeholder="Ex: Igor Dev" oninput="atualizarFormularioDinamico()">
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label small fw-semibold mb-1">5. Instituição</label>
+                                            <input type="text" id="fInst" class="form-control form-control-sm" placeholder="Ex: Interatech" oninput="atualizarFormularioDinamico()">
+                                        </div>
+                                    </div>
+                                    <div class="row g-2 mb-2">
+                                        <div class="col-6">
+                                            <label class="form-label small fw-semibold mb-1">6. Versão / Ano</label>
+                                            <input type="text" id="fVersao" class="form-control form-control-sm" value="1.0 - 2026" oninput="atualizarFormularioDinamico()">
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label small fw-semibold mb-1">7. Capítulos</label>
+                                            <input type="text" id="fCaps" class="form-control form-control-sm" placeholder="Ex: 3 capítulos" oninput="atualizarFormularioDinamico()">
+                                        </div>
+                                    </div>
+                                    <div class="mb-2">
+                                        <label class="form-label small fw-semibold mb-1">8. Tópicos Obrigatórios</label>
+                                        <textarea id="fTopicos" class="form-control form-control-sm" rows="2" placeholder="- Tópico 1&#10;- Tópico 2" oninput="atualizarFormularioDinamico()"></textarea>
+                                    </div>
+                                    <div class="mb-0">
+                                        <label class="form-label small fw-semibold mb-1">9. Preferência de Cores</label>
+                                        <input type="text" id="fCores" class="form-control form-control-sm" placeholder="Ex: Azul (#0056b3) ou Deixe a IA escolher" oninput="atualizarFormularioDinamico()">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                                <textarea id="txtPromptFormulario" class="form-control editor-textarea p-3 h-100" style="min-height: 440px;"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
 """
@@ -494,6 +683,26 @@ def listar_exemplos():
             if f.endswith(".json"):
                 arquivos.append(f)
     return jsonify(sorted(arquivos))
+
+
+@app.route("/api/prompts", methods=["GET"])
+def obter_prompts():
+    """Lê o arquivo PROMPTS_MESTRE_E_FORMULARIO.md e extrai os blocos de prompt."""
+    caminho_prompts = os.path.join(DIR_DATA, "PROMPTS_MESTRE_E_FORMULARIO.md")
+    if not os.path.isfile(caminho_prompts):
+        return jsonify({"prompt_mestre": "", "prompt_formulario": ""}), 404
+
+    with open(caminho_prompts, "r", encoding="utf-8") as f:
+        conteudo = f.read()
+
+    blocos = re.findall(r"```text\r?\n(.*?)\r?\n```", conteudo, re.DOTALL)
+    prompt_mestre = blocos[0] if len(blocos) > 0 else ""
+    prompt_formulario = blocos[1] if len(blocos) > 1 else ""
+
+    return jsonify({
+        "prompt_mestre": prompt_mestre,
+        "prompt_formulario": prompt_formulario,
+    })
 
 
 @app.route("/api/carregar-arquivo/<nome>", methods=["GET"])
